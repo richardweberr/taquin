@@ -1,4 +1,4 @@
-:root {
+:root {                                 /*  Selects the document's root element  */
     --side: 4;
 }
 
@@ -6,7 +6,7 @@
     margin: 0;
 }
 
-::selection {
+::selection {                            /*  Selects the portion of an element that is selected by a user  */
     background: transparent;
 }
 
@@ -143,8 +143,7 @@ body {
     font-weight: bold;
 }
 
-.close:hover,
-.close:focus {
+.close:hover, .close:focus {
     color: #000;
     text-decoration: none;
     cursor: pointer;
