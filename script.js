@@ -97,11 +97,11 @@ function checkWin(cs) {
 
 //randomiser la partie
 function doRandomShuffle(cs, ec) {
-    console.log("tutu");
-    const quality = 1000;
-    let random = ((Math.random() * quality)).toFixed(0)
+    const quality = 10;
+    let random = ((Math.random() * quality * side)).toFixed(0);
     for (let i = 0; i < random; i++) {
         let direction = (Math.random() * 4).toFixed(0);
+        console.log(direction);
         switch (direction) {
             case 0:
                 applyMove(cs, ec, HAUT);
