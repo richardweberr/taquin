@@ -16,7 +16,6 @@ var current_state = [];
 const empty_cell = {i: 0, j: 0};
 
 
-
 // Initialisation de l'état courant
 function setInitState() {
     current_state = [];
@@ -38,32 +37,37 @@ function setInitState() {
 
 //bouger la cellule vide en haut, bas, gauche ou droite
 function applyMove(state, ec, move) {
-    let nextX = ec.i;
-    let nextY = ec.j;
     switch (move) {
         case HAUT:
-            if ((ec.i - 1) > 0) {
+            if ((ec.i - 1) >= 0) {
+                current_state[ec.i][ec.j] = current_state[ec.i - 1][ec.j];
                 empty_cell.i = ec.i - 1;
-
+                current_state[ec.i][ec.j] = 0;
             }
             break;
         case BAS:
-            if ((ec.i + 1) < (side - 1)) {
+            if ((ec.i + 1) <= (side - 1)) {
+                current_state[ec.i][ec.j] = current_state[ec.i + 1][ec.j];
                 empty_cell.i = ec.i + 1;
+                current_state[ec.i][ec.j] = 0;
             }
             break;
         case GAUCHE:
-            if ((ec.j - 1) > 0) {
+            if ((ec.j - 1) >= 0) {
+                current_state[ec.i][ec.j] = current_state[ec.i][ec.j-1];
                 empty_cell.j = ec.j - 1;
+                current_state[ec.i][ec.j] = 0;
             }
         case DROITE:
-            if ((ec.j + 1) < (side - 1)) {
+            if ((ec.j + 1) <= (side - 1)) {
+                current_state[ec.i][ec.j] = current_state[ec.i][ec.j+1];
                 empty_cell.j = ec.j + 1;
+                current_state[ec.i][ec.j] = 0;
             }
             break;
     }
-    console.log("Movement:", move);
-    console.log(empty_cell.i, empty_cell.j);
+    // displayState(current_state);
+    // console.log("Movement:", move);
 }
 
 //affcher l'état du jeu
@@ -132,10 +136,6 @@ function reset() {
 function displayWin() {
     modal.style.display = "block";
 }
-
-
-
-
 
 
 $(".check").click(function () {
