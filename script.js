@@ -20,21 +20,23 @@ var modal = document.getElementById("myModal");
 var span = document.getElementsByClassName("close")[0];
 
 // l'identifiant du tableau gaganant
-var solutionID ;
+var solutionID;
 
-
-
+//historique des coups depuis le dernier reset
+var current_state_history;
+var reverseSequence = [];
 
 // initialise le jeu à la situation "résolue" et l'affiche, crée l'identifiant de la solution
 function reset() {
     setInitState();
     solutionID = current_state_id(current_state);
+    current_state_history = [];
     console.log("le " + typeof solutionID + " identifiant unique de la solution gagnante est: " + solutionID);
     displayState(current_state);
 }
 
 // retourne le string identifiant unique du jeu cs
-function current_state_id (cs) {
+function current_state_id(cs) {
     return cs.toString();
 }
 
@@ -86,6 +88,7 @@ function applyMove(state, ec, move) {
                 current_state[ec.i][ec.j] = state[ec.i - 1][ec.j];
                 empty_cell.i = ec.i - 1;
                 current_state[ec.i][ec.j] = 0;
+                current_state_history.push(move);
             }
             break;
         case BAS:
@@ -93,6 +96,7 @@ function applyMove(state, ec, move) {
                 current_state[ec.i][ec.j] = state[ec.i + 1][ec.j];
                 empty_cell.i = ec.i + 1;
                 current_state[ec.i][ec.j] = 0;
+                current_state_history.push(move);
             }
             break;
         case GAUCHE:
@@ -100,6 +104,7 @@ function applyMove(state, ec, move) {
                 current_state[ec.i][ec.j] = state[ec.i][ec.j - 1];
                 empty_cell.j = ec.j - 1;
                 current_state[ec.i][ec.j] = 0;
+                current_state_history.push(move);
             }
             break;
         case DROITE:
@@ -107,22 +112,23 @@ function applyMove(state, ec, move) {
                 current_state[ec.i][ec.j] = state[ec.i][ec.j + 1];
                 empty_cell.j = ec.j + 1;
                 current_state[ec.i][ec.j] = 0;
+                current_state_history.push(move);
             }
             break;
     }
+    console.log("historique: " + current_state_history);
     displayState(current_state);
-    console.log("Movement:", move);
 }
 
 //vérifier si la partie est gagnée
 function checkWin(cs) {
     console.log("le " + typeof current_state_id(cs) + " identifiant unique de l'état courant est : " + current_state_id(cs));
- if (current_state_id(cs) === solutionID) {
-     displayWin();
-     return "yes";
- } else {
-     return "no";
- }
+    if (current_state_id(cs) === solutionID) {
+        displayWin();
+        return "yes";
+    } else {
+        return "no";
+    }
 }
 
 //randomiser la partie
@@ -133,24 +139,83 @@ function doRandomShuffle(cs, ec) {
         let direction = Math.trunc(Math.random() * 4);
         switch (direction) {
             case 0:
-                applyMove(cs, ec, HAUT);
+                moveAlong(cs, ec, "H");
                 break;
             case 1:
-                applyMove(cs, ec, BAS);
+                moveAlong(cs, ec, "B");
                 break;
             case 2:
-                applyMove(cs, ec, GAUCHE);
+                moveAlong(cs, ec, "G");
                 break;
             case 3:
-                applyMove(cs, ec, DROITE);
+                moveAlong(cs, ec, "D");
                 break;
         }
     }
 }
 
-//l'ordinateur résout le jeu
-function findSolution(cs, ec) {
+function moveAlong(cs, ec, direction) {
+    switch (direction) {
+        case "H":
+            applyMove(cs, ec, HAUT);
+            break;
+        case "B":
+            applyMove(cs, ec, BAS);
+            break;
+        case "G":
+            applyMove(cs, ec, GAUCHE);
+            break;
+        case "D":
+            applyMove(cs, ec, DROITE);
+            break;
+    }
+}
 
+// l'ordinateur résout le jeu
+function findSolution(cs, ec) {
+    let resolveMethod = prompt("1. for playback\n2. for further use", "1");
+    switch (resolveMethod) {
+        case "1":
+            playMovesBack(cs, ec);
+            break;
+        case "2":
+            console.log("tati");
+            break;
+        default:
+            console.log("tito");
+    }
+}
+
+// rejoue l'inverse de la sequence joue depuis le dernier reset
+function playMovesBack(cs, ec) {
+    console.log("current_state_history " + current_state_history);
+    for (let i = 0; i < current_state_history.length; i++) {
+        reverseSequence[i] = current_state_history[i];
+    }
+    reverseSequence.reverse();
+    console.log("current_state_history " + current_state_history);
+    for (let i = 0; i < reverseSequence.length; i++) {
+        switch (reverseSequence[i]) {
+            case "H":
+                reverseSequence [i] = "B";
+                break;
+            case "B":
+                reverseSequence [i] = "H";
+                break;
+            case "G":
+                reverseSequence [i] = "D";
+                break;
+            case "D":
+                reverseSequence [i] = "G";
+                break;
+        }
+    }
+    console.log("current_state_history " + current_state_history);
+    console.log("sequence " + reverseSequence);
+
+    for (let i = 0; i < reverseSequence.length; i++) {
+        moveAlong(cs, ec, reverseSequence[i]);
+    }
 }
 
 // Pour afficher la fenêtre quand on a gagné, appeler cette fonction
@@ -216,9 +281,6 @@ $(".grid").on('click', '.item', function () {
 });
 
 
-
-
-
 $(".check").click(function () {
     console.log("Is winning? ", checkWin(current_state));
 });
@@ -260,8 +322,6 @@ window.onclick = function (event) {
         modal.style.display = "none";
     }
 };
-
-
 
 
 // changement de style css en fonction de "side"

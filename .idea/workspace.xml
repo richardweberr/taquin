@@ -21,8 +21,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/script.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="240">
-                  <caret line="224" column="24" selection-start-line="224" selection-start-column="17" selection-end-line="224" selection-end-column="24" />
+                <state relative-caret-position="612">
+                  <caret line="217" column="5" lean-forward="true" selection-start-line="194" selection-start-column="2" selection-end-line="217" selection-end-column="5" />
                 </state>
               </provider>
             </entry>
@@ -34,8 +34,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/script.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="289">
-                  <caret line="122" column="18" selection-start-line="122" selection-start-column="18" selection-end-line="122" selection-end-column="18" />
+                <state relative-caret-position="442">
+                  <caret line="26" column="24" selection-start-line="26" selection-start-column="24" selection-end-line="26" selection-end-column="24" />
                 </state>
               </provider>
             </entry>
@@ -147,12 +147,12 @@
       <workItem from="1561534528227" duration="2181000" />
       <workItem from="1561537014589" duration="1635000" />
       <workItem from="1561541592539" duration="24340000" />
-      <workItem from="1561705038720" duration="7761000" />
+      <workItem from="1561705038720" duration="19503000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="43477000" />
+    <option name="totallyTimeSpent" value="55219000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-8" width="1936" height="1056" extended-state="6" />
@@ -170,7 +170,7 @@
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
-      <window_info anchor="bottom" id="Terminal" order="9" visible="true" weight="0.13217768" />
+      <window_info anchor="bottom" id="Terminal" order="9" visible="true" weight="0.032502707" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Database Changes" order="11" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -206,8 +206,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/script.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="122" column="18" selection-start-line="122" selection-start-column="18" selection-end-line="122" selection-end-column="18" />
+        <state relative-caret-position="612">
+          <caret line="217" column="5" lean-forward="true" selection-start-line="194" selection-start-column="2" selection-end-line="217" selection-end-column="5" />
         </state>
       </provider>
     </entry>
