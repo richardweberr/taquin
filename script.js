@@ -13,9 +13,33 @@ var current_state = [];
 // position de la case vide
 const empty_cell = {i: 0, j: 0};
 
+// Une jolie fenêtre est prévue pour quand on gagne
+var modal = document.getElementById("myModal");
+
+// Pour fermer la fenetre avec un "X"
+var span = document.getElementsByClassName("close")[0];
+
+// l'identifiant du tableau gaganant
+var solutionID ;
+
+
+
+
+// initialise le jeu à la situation "résolue" et l'affiche, crée l'identifiant de la solution
+function reset() {
+    setInitState();
+    solutionID = current_state_id(current_state);
+    console.log("le " + typeof solutionID + " identifiant unique de la solution gagnante est: " + solutionID);
+    displayState(current_state);
+}
+
+// retourne le string identifiant unique du jeu cs
+function current_state_id (cs) {
+    return cs.toString();
+}
 
 // Initialisation de l'état courant
-// manipule les variables globales current_state & empty_cell
+// écrit dans les variables globales current_state & empty_cell
 function setInitState() {
     current_state = [];
     let val;
@@ -34,8 +58,27 @@ function setInitState() {
     empty_cell.j = side - 1;
 }
 
+//affcher l'état du jeu
+function displayState(tab) {
+    $(".grid").empty();
+    for (let i = 0; i < tab.length; i++) {
+        for (let j = 0; j < tab[i].length; j++) {
+            const elem = tab[i][j];
+            if (elem) {
+                const item = $(
+                    `<div data-i="${i}" data-j="${j}" class="item">${elem}</div>`
+                );
+                $(".grid").append(item);
+            } else {
+                $(".grid").append(`<div class="vide"></div>`);
+            }
+        }
+    }
+    console.log(current_state);
+}
+
 // bouger la cellule vide en haut, bas, gauche ou droite
-// manipule les variables globales current_state & empty_cell
+// écrit dans les variables globales current_state & empty_cell
 function applyMove(state, ec, move) {
     switch (move) {
         case HAUT:
@@ -71,37 +114,23 @@ function applyMove(state, ec, move) {
     console.log("Movement:", move);
 }
 
-//affcher l'état du jeu
-function displayState(tab) {
-    $(".grid").empty();
-    for (let i = 0; i < tab.length; i++) {
-        for (let j = 0; j < tab[i].length; j++) {
-            const elem = tab[i][j];
-            if (elem) {
-                const item = $(
-                    `<div data-i="${i}" data-j="${j}" class="item">${elem}</div>`
-                );
-                $(".grid").append(item);
-            } else {
-                $(".grid").append(`<div class="vide"></div>`);
-            }
-        }
-    }
-    console.log(current_state);
-}
-
 //vérifier si la partie est gagnée
 function checkWin(cs) {
-
+    console.log("le " + typeof current_state_id(cs) + " identifiant unique de l'état courant est : " + current_state_id(cs));
+ if (current_state_id(cs) === solutionID) {
+     displayWin();
+     return "yes";
+ } else {
+     return "no";
+ }
 }
 
 //randomiser la partie
 function doRandomShuffle(cs, ec) {
-    const quality = 10;
-    let random = ((Math.random() * quality * side)).toFixed(0);
+    const quality = 100;
+    let random = Math.trunc(Math.random() * quality * side);
     for (let i = 0; i < random; i++) {
-        let direction = (Math.random() * 4).toFixed(0);
-        console.log(direction);
+        let direction = Math.trunc(Math.random() * 4);
         switch (direction) {
             case 0:
                 applyMove(cs, ec, HAUT);
@@ -122,12 +151,6 @@ function doRandomShuffle(cs, ec) {
 //l'ordinateur résout le jeu
 function findSolution(cs, ec) {
 
-}
-
-//initialise le jeu à la situation "résolue" et l'affiche
-function reset() {
-    setInitState();
-    displayState(current_state);
 }
 
 // Pour afficher la fenêtre quand on a gagné, appeler cette fonction
@@ -152,10 +175,11 @@ function checkKey(e) {
             applyMove(current_state, empty_cell, DROITE);
             break;
     }
-    displayState(current_state);
-    if (checkWin(current_state)) {
-        displayWin();
-    }
+    // displayState(current_state);
+    // if (checkWin(current_state)) {
+    //     displayWin();
+    // }
+    checkWin(current_state);
 }
 
 
@@ -203,7 +227,7 @@ $(".reset").click(reset);
 
 $(".shuffle").click(function () {
     doRandomShuffle(current_state, empty_cell);
-    displayState(current_state);
+    // displayState(current_state);
 });
 
 $(".solution").click(function () {
@@ -225,13 +249,6 @@ $(".minus").click(function () {
     console.log("Plus petit")
 });
 
-// Avec le code ci-dessous, j'ai des problèmes à chaque reset car les item sont
-// supprimés.
-// Pas de gestion dynamique de .item 
-// $(".item").click(function(){
-//   console.log("Je n'existe que jusqu'à ma mort dans un reset/ shuffle")
-// }
-
 // Quand on clique sur <span> (x), on ferme
 $("span").click = function () {
     modal.style.display = "none";
@@ -245,11 +262,7 @@ window.onclick = function (event) {
 };
 
 
-// Une jolie fenêtre est prévue pour quand on gagne
-var modal = document.getElementById("myModal");
 
-// Pour fermer la fenetre avec un "X"
-var span = document.getElementsByClassName("close")[0];
 
 // changement de style css en fonction de "side"
 document.documentElement.style.setProperty("--side", side);
