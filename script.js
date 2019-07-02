@@ -134,42 +134,16 @@ function checkWin(cs) {
 //randomiser la partie
 function doRandomShuffle(cs, ec) {
     const quality = 100;
-    let random = Math.trunc(Math.random() * quality * side);
+    const random = Math.trunc(Math.random() * quality * side);
+    const available_movements = [HAUT, BAS, DROITE, GAUCHE];
     for (let i = 0; i < random; i++) {
-        let direction = Math.trunc(Math.random() * 4);
-        switch (direction) {
-            case 0:
-                moveAlong(cs, ec, "H");
-                break;
-            case 1:
-                moveAlong(cs, ec, "B");
-                break;
-            case 2:
-                moveAlong(cs, ec, "G");
-                break;
-            case 3:
-                moveAlong(cs, ec, "D");
-                break;
-        }
+        const direction = Math.trunc(Math.random() * 4);
+        const randomMove = available_movements[direction];
+        moveAlong(cs, ec, randomMove);
     }
 }
 
-function moveAlong(cs, ec, direction) {
-    switch (direction) {
-        case "H":
-            applyMove(cs, ec, HAUT);
-            break;
-        case "B":
-            applyMove(cs, ec, BAS);
-            break;
-        case "G":
-            applyMove(cs, ec, GAUCHE);
-            break;
-        case "D":
-            applyMove(cs, ec, DROITE);
-            break;
-    }
-}
+const moveAlong = applyMove
 
 // l'ordinateur résout le jeu
 function findSolution(cs, ec) {
@@ -189,33 +163,16 @@ function findSolution(cs, ec) {
 // rejoue l'inverse de la sequence joue depuis le dernier reset
 function playMovesBack(cs, ec) {
     console.log("current_state_history " + current_state_history);
-    for (let i = 0; i < current_state_history.length; i++) {
-        reverseSequence[i] = current_state_history[i];
-    }
-    reverseSequence.reverse();
-    console.log("current_state_history " + current_state_history);
-    for (let i = 0; i < reverseSequence.length; i++) {
-        switch (reverseSequence[i]) {
-            case "H":
-                reverseSequence [i] = "B";
-                break;
-            case "B":
-                reverseSequence [i] = "H";
-                break;
-            case "G":
-                reverseSequence [i] = "D";
-                break;
-            case "D":
-                reverseSequence [i] = "G";
-                break;
-        }
-    }
-    console.log("current_state_history " + current_state_history);
-    console.log("sequence " + reverseSequence);
-
-    for (let i = 0; i < reverseSequence.length; i++) {
-        moveAlong(cs, ec, reverseSequence[i]);
-    }
+    const reverseMoves = {
+        'H': BAS,
+        'B': HAUT,
+        'D': GAUCHE,
+        'G': DROITE
+    };
+    reverseSequence = current_state_history.map(move => reverseMoves[move]).reverse();
+    reverseSequence.forEach(move => {
+        moveAlong(cs, ec, move);
+    });
 }
 
 // Pour afficher la fenêtre quand on a gagné, appeler cette fonction
