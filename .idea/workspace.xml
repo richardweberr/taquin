@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="2041ad43-6e5f-4729-8e39-1685f685a1ec" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/script.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -21,8 +20,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/script.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="709">
-                  <caret line="182" column="33" lean-forward="true" selection-start-line="182" selection-start-column="33" selection-end-line="182" selection-end-column="33" />
+                <state relative-caret-position="221">
+                  <caret line="86" column="34" lean-forward="true" selection-start-line="86" selection-start-column="17" selection-end-line="86" selection-end-column="34" />
                 </state>
               </provider>
             </entry>
@@ -82,7 +81,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="2080" />
     <option name="y" value="15" />
     <option name="width" value="1400" />
@@ -94,6 +93,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -105,7 +105,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -149,18 +148,20 @@
       <workItem from="1561541592539" duration="24340000" />
       <workItem from="1561705038720" duration="19716000" />
       <workItem from="1561964652112" duration="1922000" />
-      <workItem from="1562055430225" duration="4026000" />
+      <workItem from="1562055430225" duration="4477000" />
+      <workItem from="1562224121835" duration="1203000" />
+      <workItem from="1562310510082" duration="1301000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="61380000" />
+    <option name="totallyTimeSpent" value="64335000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1912" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="1912" y="-8" width="1936" height="1056" extended-state="7" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.09378293" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.09378293" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -172,7 +173,7 @@
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
-      <window_info anchor="bottom" id="Terminal" order="9" visible="true" weight="0.14626218" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.3954496" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Database Changes" order="11" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -208,8 +209,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/script.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="709">
-          <caret line="182" column="33" lean-forward="true" selection-start-line="182" selection-start-column="33" selection-end-line="182" selection-end-column="33" />
+        <state relative-caret-position="221">
+          <caret line="86" column="34" lean-forward="true" selection-start-line="86" selection-start-column="17" selection-end-line="86" selection-end-column="34" />
         </state>
       </provider>
     </entry>
