@@ -1,3 +1,9 @@
+// Une jolie fenêtre est prévue pour quand on gagne
+const modal = document.getElementById("myModal");
+
+// Pour fermer la fenetre avec un "X"
+const span = document.getElementsByClassName("close")[0];
+
 // mouvements possibles
 const HAUT = "H";
 const BAS = "B";
@@ -5,26 +11,20 @@ const DROITE = "D";
 const GAUCHE = "G";
 
 // nombre de cases par côté du plan de jeu
-var side = 4;
+let side = 3;
 
 // retient l'état courant du taquin
-var current_state = [];
+let current_state = [];
 
 // position de la case vide
 const empty_cell = {i: 0, j: 0};
 
-// Une jolie fenêtre est prévue pour quand on gagne
-var modal = document.getElementById("myModal");
+// string identifiant du tableau gagnant
+let solutionID = "";
 
-// Pour fermer la fenetre avec un "X"
-var span = document.getElementsByClassName("close")[0];
+//historique des mouvements depuis le dernier reset
+let current_state_history = [];
 
-// l'identifiant du tableau gaganant
-var solutionID;
-
-//historique des coups depuis le dernier reset
-var current_state_history;
-var reverseSequence = [];
 
 // initialise le jeu à la situation "résolue" et l'affiche, crée l'identifiant de la solution
 function reset() {
@@ -81,11 +81,11 @@ function displayState(tab) {
 
 // bouger la cellule vide en haut, bas, gauche ou droite
 // écrit dans les variables globales current_state & empty_cell
-function applyMove(state, ec, move) {
+function applyMove(cs, ec, move) {
     switch (move) {
         case HAUT:
             if ((ec.i - 1) >= 0) {
-                current_state[ec.i][ec.j] = state[ec.i - 1][ec.j];
+                current_state[ec.i][ec.j] = cs[ec.i - 1][ec.j];
                 empty_cell.i = ec.i - 1;
                 current_state[ec.i][ec.j] = 0;
                 current_state_history.push(move);
@@ -93,7 +93,7 @@ function applyMove(state, ec, move) {
             break;
         case BAS:
             if ((ec.i + 1) <= (side - 1)) {
-                current_state[ec.i][ec.j] = state[ec.i + 1][ec.j];
+                current_state[ec.i][ec.j] = cs[ec.i + 1][ec.j];
                 empty_cell.i = ec.i + 1;
                 current_state[ec.i][ec.j] = 0;
                 current_state_history.push(move);
@@ -101,7 +101,7 @@ function applyMove(state, ec, move) {
             break;
         case GAUCHE:
             if ((ec.j - 1) >= 0) {
-                current_state[ec.i][ec.j] = state[ec.i][ec.j - 1];
+                current_state[ec.i][ec.j] = cs[ec.i][ec.j - 1];
                 empty_cell.j = ec.j - 1;
                 current_state[ec.i][ec.j] = 0;
                 current_state_history.push(move);
@@ -109,7 +109,7 @@ function applyMove(state, ec, move) {
             break;
         case DROITE:
             if ((ec.j + 1) <= (side - 1)) {
-                current_state[ec.i][ec.j] = state[ec.i][ec.j + 1];
+                current_state[ec.i][ec.j] = cs[ec.i][ec.j + 1];
                 empty_cell.j = ec.j + 1;
                 current_state[ec.i][ec.j] = 0;
                 current_state_history.push(move);
@@ -143,8 +143,6 @@ function doRandomShuffle(cs, ec) {
     }
 }
 
-const moveAlong = applyMove
-
 // l'ordinateur résout le jeu
 function findSolution(cs, ec) {
     let resolveMethod = prompt("1. for playback\n2. for further use", "1");
@@ -169,7 +167,7 @@ function playMovesBack(cs, ec) {
         'D': GAUCHE,
         'G': DROITE
     };
-    reverseSequence = current_state_history.map(move => reverseMoves[move]).reverse();
+    let reverseSequence = current_state_history.map(move => reverseMoves[move]).reverse();
     reverseSequence.forEach(move => {
         moveAlong(cs, ec, move);
     });
@@ -197,10 +195,6 @@ function checkKey(e) {
             applyMove(current_state, empty_cell, DROITE);
             break;
     }
-    // displayState(current_state);
-    // if (checkWin(current_state)) {
-    //     displayWin();
-    // }
     checkWin(current_state);
 }
 
@@ -269,13 +263,13 @@ $(".minus").click(function () {
 });
 
 // Quand on clique sur <span> (x), on ferme
-$("span").click = function () {
+span.onclick = function () {
     modal.style.display = "none";
 };
 
 // On ferme aussi si on clique n'importe où
 window.onclick = function (event) {
-    if (event.target == modal) {
+    if (event.target === modal) {
         modal.style.display = "none";
     }
 };
