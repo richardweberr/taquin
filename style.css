@@ -1,5 +1,5 @@
 :root {                                 /*  Selects the document's root element  */
-    --side: 4;
+    --side: 3;
 }
 
 * {

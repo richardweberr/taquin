@@ -13,26 +13,25 @@ const GAUCHE = "G";
 // nombre de cases par côté du plan de jeu
 let side = 3;
 
-// retient l'état courant du taquin
-let current_state = [];
-
-// position de la case vide
-const empty_cell = {i: 0, j: 0};
-
 // string identifiant du tableau gagnant
 let solutionID = "";
 
-//historique des mouvements depuis le dernier reset
+// retient l'état courant du taquin
+let current_state = [];
+// position de la case vide
+let empty_cell = {i: 0, j: 0};
+// historique des mouvements depuis le dernier reset
 let current_state_history = [];
+let gameState = {ec: empty_cell, cs: current_state, csh: current_state_history};
 
 
 // initialise le jeu à la situation "résolue" et l'affiche, crée l'identifiant de la solution
 function reset() {
     setInitState();
-    solutionID = current_state_id(current_state);
-    current_state_history = [];
-    console.log("le " + typeof solutionID + " identifiant unique de la solution gagnante est: " + solutionID);
-    displayState(current_state);
+    solutionID = current_state_id(gameState.cs);
+    gameState.csh = [];
+    // console.log("le " + typeof solutionID + " identifiant unique de la solution gagnante est: " + solutionID);
+    displayState(gameState.cs);
 }
 
 // retourne le string identifiant unique du jeu cs
@@ -41,31 +40,52 @@ function current_state_id(cs) {
 }
 
 // Initialisation de l'état courant
-// écrit dans les variables globales current_state & empty_cell
+// écrit dans les variables globales
 function setInitState() {
-    current_state = [];
+    gameState.cs = [];
     let val;
     for (let i = 0; i < side; i++) {
-        current_state[i] = [];
+        gameState.cs[i] = [];
         for (let j = 0; j < side; j++) {
             if (i === (side - 1) && j === (side - 1)) {
                 val = 0;
             } else {
                 val = i * side + j + 1;
             }
-            current_state[i][j] = val;
+            gameState.cs[i][j] = val;
         }
     }
-    empty_cell.i = side - 1;
-    empty_cell.j = side - 1;
+    gameState.ec.i = side - 1;
+    gameState.ec.j = side - 1;
 }
 
-//affcher l'état du jeu
-function displayState(tab) {
+// maj vars globales gameState
+function updateGameState(cs, ec, move) {
+    let temp = applyMove(cs, ec, move);
+    gameState.cs = temp.cs.map(val => val);
+    gameState.ec = temp.ec;
+    gameState.csh.push(temp.move);
+    displayState(gameState.cs);
+}
+
+// maj vars globales gameState
+function updateGameStateNoHistory(cs, ec, move) {
+    console.log("toto");
+    let temp = applyMove(cs, ec, move);
+    gameState.cs = temp.cs.map(val => val);
+    // gameState.cs = [...temp.cs];
+    console.log(temp.cs);
+    console.log(gameState.cs);
+    gameState.ec = temp.ec;
+    displayState(gameState.cs);
+}
+
+// afficher l'état du jeu
+function displayState(cs) {
     $(".grid").empty();
-    for (let i = 0; i < tab.length; i++) {
-        for (let j = 0; j < tab[i].length; j++) {
-            const elem = tab[i][j];
+    for (let i = 0; i < cs.length; i++) {
+        for (let j = 0; j < cs[i].length; j++) {
+            const elem = cs[i][j];
             if (elem) {
                 const item = $(
                     `<div data-i="${i}" data-j="${j}" class="item">${elem}</div>`
@@ -76,51 +96,45 @@ function displayState(tab) {
             }
         }
     }
-    console.log(current_state);
+    // console.log(cs);
 }
 
 // bouger la cellule vide en haut, bas, gauche ou droite
-// écrit dans les variables globales current_state & empty_cell
 function applyMove(cs, ec, move) {
     switch (move) {
         case HAUT:
             if ((ec.i - 1) >= 0) {
-                current_state[ec.i][ec.j] = cs[ec.i - 1][ec.j];
-                empty_cell.i = ec.i - 1;
-                current_state[ec.i][ec.j] = 0;
-                current_state_history.push(move);
+                cs[ec.i][ec.j] = cs[ec.i - 1][ec.j];
+                ec.i = ec.i - 1;
+                cs[ec.i][ec.j] = 0;
             }
             break;
         case BAS:
             if ((ec.i + 1) <= (side - 1)) {
-                current_state[ec.i][ec.j] = cs[ec.i + 1][ec.j];
-                empty_cell.i = ec.i + 1;
-                current_state[ec.i][ec.j] = 0;
-                current_state_history.push(move);
+                cs[ec.i][ec.j] = cs[ec.i + 1][ec.j];
+                ec.i = ec.i + 1;
+                cs[ec.i][ec.j] = 0;
             }
             break;
         case GAUCHE:
             if ((ec.j - 1) >= 0) {
-                current_state[ec.i][ec.j] = cs[ec.i][ec.j - 1];
-                empty_cell.j = ec.j - 1;
-                current_state[ec.i][ec.j] = 0;
-                current_state_history.push(move);
+                cs[ec.i][ec.j] = cs[ec.i][ec.j - 1];
+                ec.j = ec.j - 1;
+                cs[ec.i][ec.j] = 0;
             }
             break;
         case DROITE:
             if ((ec.j + 1) <= (side - 1)) {
-                current_state[ec.i][ec.j] = cs[ec.i][ec.j + 1];
-                empty_cell.j = ec.j + 1;
-                current_state[ec.i][ec.j] = 0;
-                current_state_history.push(move);
+                cs[ec.i][ec.j] = cs[ec.i][ec.j + 1];
+                ec.j = ec.j + 1;
+                cs[ec.i][ec.j] = 0;
             }
             break;
     }
-    console.log("historique: " + current_state_history);
-    displayState(current_state);
+    return {ec: ec, cs: cs, move: move};
 }
 
-//vérifier si la partie est gagnée
+// vérifier si la partie est gagnée
 function checkWin(cs) {
     console.log("le " + typeof current_state_id(cs) + " identifiant unique de l'état courant est : " + current_state_id(cs));
     if (current_state_id(cs) === solutionID) {
@@ -131,45 +145,49 @@ function checkWin(cs) {
     }
 }
 
-//randomiser la partie
-function doRandomShuffle(cs, ec) {
-    const quality = 100;
+// modifies global var and displays
+function doRandomShuffle() {
+    const quality = 20;
     const random = Math.trunc(Math.random() * quality * side);
     const available_movements = [HAUT, BAS, DROITE, GAUCHE];
     for (let i = 0; i < random; i++) {
         const direction = Math.trunc(Math.random() * 4);
         const randomMove = available_movements[direction];
-        moveAlong(cs, ec, randomMove);
+        updateGameState(gameState.cs, gameState.ec, randomMove);
     }
 }
 
-// l'ordinateur résout le jeu
-function findSolution(cs, ec) {
+// solves the game
+function findSolution(gs) {
     let resolveMethod = prompt("1. for playback\n2. for further use", "1");
     switch (resolveMethod) {
         case "1":
-            playMovesBack(cs, ec);
+            console.log("solution by movement playback");
+            playMovesBack(gs);
             break;
         case "2":
-            console.log("tati");
+            console.log("solution by Breadth-first search");
             break;
         default:
-            console.log("tito");
+            console.log("solution by Depth-first search");
     }
 }
 
 // rejoue l'inverse de la sequence joue depuis le dernier reset
-function playMovesBack(cs, ec) {
-    console.log("current_state_history " + current_state_history);
+function playMovesBack(gs) {
+    console.log(gs.csh);
     const reverseMoves = {
-        'H': BAS,
-        'B': HAUT,
-        'D': GAUCHE,
-        'G': DROITE
+        "H": BAS,
+        "B": HAUT,
+        "D": GAUCHE,
+        "G": DROITE,
     };
-    let reverseSequence = current_state_history.map(move => reverseMoves[move]).reverse();
+    let reverseSequence = gameState.csh.map(move => reverseMoves[move]).reverse();
+    console.log(reverseSequence);
     reverseSequence.forEach(move => {
-        moveAlong(cs, ec, move);
+        console.log("titi");
+        console.log(move);
+        updateGameStateNoHistory(gameState.cs, gameState.ec, move);
     });
 }
 
@@ -183,19 +201,19 @@ function checkKey(e) {
     e = e || window.event;
     switch (e.keyCode) {
         case 38:
-            applyMove(current_state, empty_cell, HAUT);
+            updateGameState(gameState.cs, gameState.ec, HAUT);
             break;
         case 40:
-            applyMove(current_state, empty_cell, BAS);
+            updateGameState(gameState.cs, gameState.ec, BAS);
             break;
         case 37:
-            applyMove(current_state, empty_cell, GAUCHE);
+            updateGameState(gameState.cs, gameState.ec, GAUCHE);
             break;
         case 39:
-            applyMove(current_state, empty_cell, DROITE);
+            updateGameState(gameState.cs, gameState.ec, DROITE);
             break;
     }
-    checkWin(current_state);
+    checkWin(gameState.cs);
 }
 
 
@@ -208,24 +226,24 @@ $(".grid").on('click', '.item', function () {
         "Valeur:", $(this).html(),
         "click i:", data_i,
         "click j:", data_j);
-    let delta_i = data_i - empty_cell.i;
-    let delta_j = data_j - empty_cell.j;
+    let delta_i = data_i - gameState.ec.i;
+    let delta_j = data_j - gameState.ec.j;
     if (((Math.abs(delta_i) <= 1) || (Math.abs(delta_j) <= 1)) && !(((Math.abs(delta_i) === 1) && (Math.abs(delta_j) === 1)))) {
         console.log("vide bouge");
         switch (delta_i) {
             case 1:
-                applyMove(current_state, empty_cell, BAS);
+                updateGameState(gameState.cs, gameState.ec, BAS);
                 break;
             case -1:
-                applyMove(current_state, empty_cell, HAUT);
+                updateGameState(gameState.cs, gameState.ec, HAUT);
                 break;
         }
         switch (delta_j) {
             case 1:
-                applyMove(current_state, empty_cell, DROITE);
+                updateGameState(gameState.cs, gameState.ec, DROITE);
                 break;
             case -1:
-                applyMove(current_state, empty_cell, GAUCHE);
+                updateGameState(gameState.cs, gameState.ec, GAUCHE);
                 break;
         }
     }
@@ -233,19 +251,19 @@ $(".grid").on('click', '.item', function () {
 
 
 $(".check").click(function () {
-    console.log("Is winning? ", checkWin(current_state));
+    console.log("Is winning? ", checkWin(gameState.cs));
 });
 
 $(".reset").click(reset);
 
 $(".shuffle").click(function () {
-    doRandomShuffle(current_state, empty_cell);
-    // displayState(current_state);
+    doRandomShuffle();
 });
 
 $(".solution").click(function () {
-    console.log("Solution demandée par l'utilisateur·ice")
-    findSolution(current_state, empty_cell);
+    console.log("Solution demandée par l'utilisateur·ice");
+    console.log(gameState);
+    findSolution(gameState);
 });
 
 // Pour augmenter la taille d'un côté.
